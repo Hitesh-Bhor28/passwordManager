@@ -1,0 +1,17 @@
+# Ignore compiled files
+/bin/
+*.class
+
+# Ignore Eclipse project files
+.classpath
+.project
+.settings/
+
+# Ignore OS-specific files
+*.log
+*.DS_Store
+Thumbs.db
+
+# Ignore miscellaneous
+.idea/
+*.iml
