@@ -8,7 +8,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PasswordManager {
+	
+	public static boolean updatePassword(int userId, String accountName, String newPassword) {
+	    String query = "UPDATE passwords SET account_password = ? WHERE user_id = ? AND account_name = ?";
+	    try (Connection conn = Database.connect();
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+	        stmt.setString(1, newPassword);
+	        stmt.setInt(2, userId);
+	        stmt.setString(3, accountName);
+
+	        int rowsUpdated = stmt.executeUpdate();
+	        return rowsUpdated > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+
     public static boolean addPassword(int userId, String accountName, String accountPassword) {
+        if (accountName == null || accountPassword == null) return false;
         String query = "INSERT INTO passwords (user_id, account_name, account_password) VALUES (?, ?, ?)";
         try (Connection conn = Database.connect();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -31,9 +50,7 @@ public class PasswordManager {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                String accountName = rs.getString("account_name");
-                String accountPassword = rs.getString("account_password");
-                passwords.add(new String[]{accountName, accountPassword});
+                passwords.add(new String[]{rs.getString("account_name"), rs.getString("account_password")});
             }
         } catch (SQLException e) {
             e.printStackTrace();
