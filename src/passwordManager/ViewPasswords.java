@@ -13,7 +13,6 @@ public class ViewPasswords extends JFrame {
         setSize(500, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Update column names to include Password Strength
         String[] columnNames = {"Account", "Password", "Strength"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(model);
@@ -23,7 +22,6 @@ public class ViewPasswords extends JFrame {
             String accountName = password[0];
             String accountPassword = password[1];
 
-            // Evaluate password strength and set the value for the third column
             String strength = evaluatePasswordStrength(accountPassword);
 
             model.addRow(new Object[]{accountName, accountPassword, strength});
@@ -32,10 +30,9 @@ public class ViewPasswords extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        setVisible(true); // Ensure the frame is visible
+        setVisible(true);
     }
 
-    // Method to evaluate password strength
     private String evaluatePasswordStrength(String password) {
         if (password.length() < 6) {
             return "Weak";
