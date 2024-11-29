@@ -48,8 +48,9 @@ public class Main extends JFrame {
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton addPasswordButton = new JButton("Add Password");
-        JButton viewPasswordsButton = new JButton("View Passwords");
+        JButton viewPasswordsButton = new JButton("View All Passwords");
         JButton strongPasswordButton = new JButton("Generate Strong Password");
+        JButton searchButton = new JButton("Search");
         JButton logoutButton = new JButton("Logout");
         
         
@@ -57,6 +58,7 @@ public class Main extends JFrame {
         buttonPanel.add(addPasswordButton);
         buttonPanel.add(viewPasswordsButton);
         buttonPanel.add(strongPasswordButton);
+        buttonPanel.add(searchButton);
         buttonPanel.add(logoutButton);
 
        
@@ -131,6 +133,28 @@ public class Main extends JFrame {
             // Ensure the table is updated properly
             table.revalidate();
             table.repaint();
+        });
+        
+        searchButton.addActionListener(e -> {
+            String searchQuery = JOptionPane.showInputDialog(this, "Enter account name to search:");
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                model.setRowCount(0); // Clear the table
+                List<String[]> passwords = PasswordManager.fetchPasswords(currentUserId); // Fetch all passwords
+
+                // Filter passwords that match the search query
+                for (String[] password : passwords) {
+                    if (password[0].toLowerCase().contains(searchQuery.toLowerCase())) {
+                        String strength = evaluatePasswordStrength(password[1]);
+                        model.addRow(new Object[]{password[0], password[1], strength});
+                    }
+                }
+
+                if (model.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "No accounts found matching the search query.", "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Search query cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
 
